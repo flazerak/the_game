@@ -1,0 +1,11 @@
+body{
+    background-color: rgb(232, 228, 228);
+}
+#pong{
+    position: absolute;
+    margin :auto;
+    top:0;
+    right:0;
+    left:0;
+    bottom:0;
+}
