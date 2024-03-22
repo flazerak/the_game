@@ -9,3 +9,34 @@ body{
     left:0;
     bottom:0;
 }
+
+
+#gameMode {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+#gameMode button {
+    margin: 0 10px 10px 0;
+    padding: 5px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.selected {
+   font-weight: bold;
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    background-color: #f0f0f0;
+    color: rgb(23, 22, 22);
+}

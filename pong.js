@@ -4,12 +4,7 @@ const canvas = document.getElementById("pong");
 // getContext of canvas = methods and properties to draw and do a lot of thing to the canvas
 const ctx = canvas.getContext('2d');
 
-// // load sounds
-// let hit = new Audio();
-// let wall = new Audio();
-
-// hit.src = "sounds/hit.mp3";
-// wall.src = "sounds/wall.mp3";
+let isTwoPlayer = false;
 
 // Ball object
 const ball = {
@@ -18,7 +13,7 @@ const ball = {
     radius : 10,
     velocityX : 5,
     velocityY : 5,
-    speed : 7,
+    speed : 5,
     color : "WHITE"
 }
 
@@ -66,14 +61,46 @@ function drawArc(x, y, r, color){
     ctx.fill();
 }
 
-// listening to the mouse
-canvas.addEventListener("mousemove", getMousePos);
+document.addEventListener("DOMContentLoaded", function() {
+    const startButton = document.createElement("button");
+    startButton.textContent = "Start";
+    startButton.id = "startButton";
+    document.body.appendChild(startButton);
 
-function getMousePos(evt){
-    let rect = canvas.getBoundingClientRect();
+    // Position the button in the middle of the canvas
+    const canvasRect = canvas.getBoundingClientRect();
+    startButton.style.position = "absolute";
+    startButton.style.left = `${canvasRect.left + canvas.width / 2 - startButton.offsetWidth / 2}px`;
+    startButton.style.top = `${canvasRect.top + canvas.height / 1.25 - startButton.offsetHeight / 2}px`;
+
+    // Event listener to start the game and remove the button
+    startButton.addEventListener("click", function() {
+        // Start game logic here
+        game_on();
+        // Remove or hide the start button
+        startButton.style.display = "none";
+    });
+});
+
+
+document.body.addEventListener('keydown', handleKeydown);
+
+function handleKeydown(ev){
+
+    if (ev.key == "ArrowDown" && (user.y + user.height) < canvas.height)
+        user.y += ball.speed * 3;
+
+    if (ev.key == "ArrowUp" && user.y > 0)
+        user.y -= ball.speed * 3;
+    //handle com
+    if((ev.key == "w" || ev.key == 'W') && com.y > 0 && isTwoPlayer)
+        com.y -= ball.speed * 3;
+    if((ev.key == "s" || ev.key == 'S') &&((com.y + com.height) < canvas.height) && isTwoPlayer)
+        com.y += ball.speed * 3;
     
-    user.y = evt.clientY - rect.top - user.height/2;
 }
+
+
 
 // when COM or USER scores, we reset the ball
 function resetBall(){
@@ -112,6 +139,46 @@ function collision(b,p){
     return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 }
 
+function resetGame(){
+    user.score = 0;
+    com.score = 0;
+    resetBall();
+    restPadlles();
+
+}
+
+function  restPadlles(){
+    user.x = 0;
+    user.y = (canvas.height - 100)/2;
+    com.x = canvas.width - 10;
+    com.y = (canvas.height - 100)/2;
+
+   
+}
+
+document.getElementById('vsComputer').addEventListener('click', function() {
+    isTwoPlayer = false;
+    updateButtonStyles(this);
+    resetGame(); 
+});
+
+document.getElementById('twoPlayers').addEventListener('click', function() {
+    isTwoPlayer = true;
+    updateButtonStyles(this);
+    resetGame(); 
+});
+
+
+function updateButtonStyles(selectedButton) {
+    const buttons = document.querySelectorAll('#gameMode button');
+    buttons.forEach(button => {
+        button.classList.remove('selected');
+    });
+    selectedButton.classList.add('selected');
+}
+
+
+
 // update function, the function that does all calculations
 function update(){
     
@@ -130,14 +197,15 @@ function update(){
     
     // computer plays for itself, and we must be able to beat it
     // simple AI
-    com.y += ((ball.y - (com.y + com.height/2)))*0.1;
+    if (!isTwoPlayer)
+        com.y += ((ball.y - (com.y + com.height/2)))*0.1;
     
     // when the ball collides with bottom and top walls we inverse the y velocity.
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){
         ball.velocityY = -ball.velocityY;
     }
     
-    // we check if the paddle hit the user or the com paddle
+    //  check if the paddle hit the user or the com paddle
     let player = (ball.x + ball.radius < canvas.width/2) ? user : com;
     
     // if the ball hits a paddle
@@ -171,10 +239,10 @@ function render(){
     drawRect(0, 0, canvas.width, canvas.height, "#000");
     
     // draw the user score to the left
-    drawText(user.score,canvas.width/4,canvas.height/5);
+    drawText(user.score, canvas.width/4,canvas.height/5);
     
     // draw the COM score to the right
-    drawText(com.score,3*canvas.width/4,canvas.height/5);
+    drawText(com.score, 3*canvas.width/4,canvas.height/5);
     
     // draw the net
     drawNet();
