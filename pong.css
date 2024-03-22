@@ -11,25 +11,13 @@ body{
 }
 
 
-#gameMode {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-}
 
-#gameMode button {
-    margin: 0 10px 10px 0;
-    padding: 5px 20px;
-    background-color: #f0f0f0;
-    border: 1px solid #d3d3d3;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
-button.selected {
+
+
+/* button.selected {
    font-weight: bold;
-}
+} */
 
 #startButton {
     padding: 10px 20px;
@@ -39,4 +27,27 @@ button.selected {
     border-radius: 2px;
     background-color: #f0f0f0;
     color: rgb(23, 22, 22);
+}
+
+#gameMode {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+}
+
+#gameMode button {
+    display: block; 
+    width: 200px;
+    margin: 10px auto; 
+    padding: 20px;
+    font-size: 20px; 
+    background-color: black;
+    border: 2px solid #d3d3d3;
+    border-radius: 5px;
+    cursor: pointer;
+    border-color: #ffffff;
+    color : white;
 }
